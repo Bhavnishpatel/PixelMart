@@ -3,6 +3,7 @@ const app = express();
 //Imports
 const dotenv = require('dotenv')
 const {connectToDB}=require('./connection.js')
+const cors=require('cors')
 
 //Router Imports
 const authRoute=require('./routes/authRoutes.js');
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 //MiddelWares
 app.use(express.json());
+app.use(cors());
 
 //All Routes
 app.use('/api',authRoute);

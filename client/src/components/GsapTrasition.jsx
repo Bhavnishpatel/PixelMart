@@ -6,6 +6,7 @@ import SellerDashboard from "../pages/SellerDashboard";
 import BuyerDashboard from "../pages/BuyerDashboard";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import  {Toaster} from "react-hot-toast"
 
 const GsapTrasition = () => {
   const nodeRef= useRef(null); 
@@ -17,6 +18,7 @@ const GsapTrasition = () => {
   },[location])
 
   return <div ref={nodeRef}>
+    <Toaster />
     <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
