@@ -1,16 +1,21 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import GsapTrasition from "./components/GsapTrasition";
-import gsap from "gsap";
 import Footer from "./components/Footer";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
+
 const App = () => {
+
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <GsapTrasition />
-        <Footer />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Navbar />
+          <GsapTrasition />
+          <Footer />
+        </BrowserRouter>
+      </Provider>
     </>
   );
 };

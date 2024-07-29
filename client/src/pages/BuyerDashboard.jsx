@@ -1,7 +1,7 @@
 
 const BuyerDashboard = () => {
   return (
-    <div>BuyerDashboard</div>
+    <div className="mt-20">BuyerDashboard</div>
   )
 }
 

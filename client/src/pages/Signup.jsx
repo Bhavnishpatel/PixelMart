@@ -8,10 +8,11 @@ const Signup = () => {
   const [userName,setUserName]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
-  const [accountType,setAccountType]=useState("");
+  const [accountType,setAccountType]=useState("buyer");
   
   const handleSignUp=async (e)=>{
     e.preventDefault();
+    console.log(accountType);
     try {
       const res=await axios.post(`${import.meta.env.VITE_APP_URL}/signup`,{
         userName,
@@ -99,7 +100,7 @@ const Signup = () => {
               Select User Account Type
             </label>
             <select onChange={(e)=>setAccountType(e.target.value)} className="shadow-md rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-black focus:border-black" >
-              <option  value="buyer">Buyer</option>
+              <option value="buyer">Buyer</option>
               <option value="seller">Seller</option>
             </select>
           </div>

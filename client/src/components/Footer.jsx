@@ -1,8 +1,13 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const Footer = () => {
+  const { pathname } = useLocation();
+
   return (
+    
     <>
+    { pathname==='/buyer/profile' || pathname==='/seller/profile' ? '':
       <footer className="relative bg-blueGray-200 pt-8 pb-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap text-left lg:text-left">
@@ -84,7 +89,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </footer>}
     </>
   );
 };
