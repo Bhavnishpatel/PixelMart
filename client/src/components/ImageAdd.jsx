@@ -35,8 +35,8 @@ const ImageAdd = () => {
       const res=await axios.post(import.meta.env.VITE_APP_URL+"/post/create",{
          title,
          price,
-         imageUrl: secure_url,
-         public_id:public_id,
+         image: secure_url,
+         publicId:public_id,
          author 
       },{
         headers: {

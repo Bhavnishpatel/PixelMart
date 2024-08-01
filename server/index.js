@@ -7,6 +7,7 @@ const cors=require('cors')
 
 //Router Imports
 const authRoute=require('./routes/authRoutes.js');
+const postRoute=require('./routes/postRoutes.js');
 
 // Binding dotenv
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cors());
 
 //All Routes
 app.use('/api',authRoute);
+app.use('/api/post',postRoute);
         
 app.listen(process.env.PORT || 5000 , () => {
     console.log(`Server listening on ${process.env.PORT}`)}
