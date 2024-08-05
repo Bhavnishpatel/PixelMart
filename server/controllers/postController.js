@@ -78,8 +78,83 @@ const getMyPost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+   const {id}=req.params;
+   try {
+     const post=await Post.findOne(id);
+     if(!post) return res.status(404).json({success:false,message:"Post Not Found"});
+     const {authorId}=post;
+      await User.findByIdAndUpdate(authorId,{
+      $pull:{uploads:id}
+     }) 
+
+     return res.status(200).json({success:true,message:"Post Deleted Successfully"});
+   } catch (error) {
+       return res.status(500).json({success:false,message:"Internal Server Error"});
+   }
+
+}
+
+const searchPost=async (req,res)=>{
+   const {search}=req.query;
+   try {
+      const posts=await Post.find({title:{$regex:search,$options:"i"}});
+      if(posts.length==0) return res.status(404).json({success:false,message:"No Post Found"});
+      return res.status(200).json({success:true,data:posts});
+   } catch (error) {
+     return res.status(500).json({success:false,message:"Internal Server Error"});
+   }
+}
+
+const addToFavourites=async (req,res)=>{
+  const {authorId}=req.id;
+  const {postId}=req.params;
+  try {
+    const user=await User.findByIdAndUpdate(authorId,{
+      $push:{
+        favoutrites:postId
+      }
+    })
+    if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+    return res.status(200).json({success:true,message:"Post Added to Favourites"});
+  } catch (error) {
+     return res.status(500).json({success:false,message:"Internal Server Error"});
+  } 
+}
+const removeToFavourites=async (req,res)=>{
+  const {authorId}=req.id;
+  const {postId}=req.params;
+  try {
+    const user=await User.findByIdAndUpdate(authorId,{
+      $pull:{
+        favoutrites:postId
+      }
+    })
+    if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+    return res.status(200).json({success:true,message:"Post Removed From Favourites"});
+  } catch (error) {
+     return res.status(500).json({success:false,message:"Internal Server Error"});
+  } 
+}
+
+const getFavourites=async (req,res)=>{
+   const authorId=req.id;
+   try {
+      const {favoutrites}=await User.findById(authorId).populate('favourites');
+      if(!favoutrites) return res.status(404).json({success:false,message:"No Favourites found"});
+      return res.status(200).json({success:true,data:favoutrites});
+   } catch (error) {
+      return res.status(500).json({success:false,message:"Internal Server Error"});
+   }
+}
+
 module.exports = {
   createPost,
   getAllPosts,
-  getMyPost
+  getMyPost,
+  deletePost,
+  searchPost,
+  addToFavourites,
+  removeToFavourites,
+  getFavourites
 };
