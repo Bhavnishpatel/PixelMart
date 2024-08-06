@@ -7,7 +7,7 @@ const authSlice = createSlice({
         refreshToken: localStorage.getItem("refreshToken") || null,
         role: localStorage.getItem("role") || null,
         author:localStorage.getItem("author") || null,
-        isAuthenticated:!!localStorage.getItem("accessToken"),
+        isAuthenticated: !!localStorage.getItem("accessToken"),
     },
     reducers: {
         login:(state,action)=>{

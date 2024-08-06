@@ -48,16 +48,14 @@ const login = async (req, res) => {
     };
     const accessToken = generateAccessToken(data);
     const refreshToken = generateRefreshToken(data);
-    return res
-      .status(200)
-      .json({
-        success: true,
-        Message: "Login successfull",
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        role: user.accountType,
-        author: user.userName,
-      });
+    return res.status(200).json({
+      success: true,
+      Message: "Login successfull",
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      role: user.accountType,
+      author: user.userName,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -65,4 +63,76 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+const refresh = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token)
+    return res.status(401).json({ success: true, message: "Please Login" });
+  try {
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err)
+        return res
+          .status(403)
+          .json({ success: false, message: "Forbidden Request" });
+      const accessToken = generateAccessToken({
+        id: user.id,
+        author: user.author,
+        accountType: user.accountType,
+      });
+      const refreshToken = generateRefreshToken({
+        id: user.id,
+        author: user.author,
+        accountType: user.accountType,
+      });
+      return res.status(200).json({
+        success: true,
+        message: "Login successfull",
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        role: user.accountType,
+        author: user.author,
+      });
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const switchProfile = async (req, res) => {
+  const authorId = req.id;
+  const authorAccountType = req.accountType;
+  try {
+    const user = await User.findByIdAndUpdate(authorId, {
+      accountType: authorAccountType == "buyer" ? "seller" : "buyer",
+    });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User Not Found" });
+    const data = {
+      id: user._id,
+      accountType: user.accountType,
+      author: user.userName,
+    };
+    const accessToken = generateAccessToken(data);
+    const refreshToken = generateRefreshToken(data);
+    return res
+      .status(200)
+      .json({
+        success: true,
+        Message: `Switched to ${user.accountType}`,
+        accessToken,
+        refreshToken,
+        role: user.accountType,
+        author: user.userName,
+      });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { signup, login, refresh ,switchProfile};
