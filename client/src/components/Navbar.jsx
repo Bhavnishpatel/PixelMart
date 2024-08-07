@@ -6,30 +6,30 @@ import { useEffect } from "react";
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
-  const isAuthenticated=useSelector((state)=>state.auth.isAuthenticated);
-  const role=useSelector((state)=>state.auth.role);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const role = useSelector((state) => state.auth.role);
 
-  const refershToken=async()=>{
+  const refershToken = async () => {
     try {
-      const res=await axios.get(import.meta.env.VITE_APP_URL+"/refresh",{
+      const res = await axios.get(import.meta.env.VITE_APP_URL + "/refresh", {
         headers: {
           authorization: "Bearer " + localStorage.getItem("refreshToken"),
         },
-      })  
-      const data=await res.data;
-      dispatch(login(data))    
+      });
+      const data = await res.data;
+      dispatch(login(data));
     } catch (error) {
-       dispatch(logout());
+      dispatch(logout());
     }
-  }
-  useEffect(()=>{
-    const interval=setInterval(()=>{
+  };
+  useEffect(() => {
+    const interval = setInterval(() => {
       refershToken();
-    },1000*60*13); // 13 minutes Interval
-    return ()=>clearInterval(interval);
-  },[]);
+    }, 1000 * 60 * 13); // 13 minutes Interval
+    return () => clearInterval(interval);
+  }, []);
   return (
     <nav
       className={`flex flex-col sm:flex-row justify-between items-start sm:items-center px-5 py-5 ${
@@ -55,20 +55,29 @@ const Navbar = () => {
         <Link to="/" className="hover:text-black cursor-pointer sm:p-2">
           Contact
         </Link>
-        {!isAuthenticated?
-         <>      
-        <Link to="/login" className="hover:text-black cursor-pointer sm:p-2">
-          Log In
-        </Link>
-        <Link to="/signup" className="hover:text-black cursor-pointer sm:p-2">
-          Sign Up
-        </Link>
-
-         </>:
-         <Link to={`/${role}/profile`} className="hover:text-black cursor-pointer sm:p-2">
-          Profile
-        </Link>
-        }
+        {!isAuthenticated ? (
+          <>
+            <Link
+              to="/login"
+              className="hover:text-black cursor-pointer sm:p-2"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/signup"
+              className="hover:text-black cursor-pointer sm:p-2"
+            >
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <Link
+            to={`/${role}/profile`}
+            className="hover:text-black cursor-pointer sm:p-2"
+          >
+            Profile
+          </Link>
+        )}
       </ul>
     </nav>
   );

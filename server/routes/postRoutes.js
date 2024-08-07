@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const { createPost, getAllPosts, getMyPost, deletePost, addToFavourites, removeToFavourites, searchPost, getFavourites } = require('../controllers/postController');
+const { createPost, getAllPosts, getMyPost, deletePost, addToFavourites, removeToFavourites, searchPost, getFavourites, getPostByRange } = require('../controllers/postController');
 const {verifyToken}=require('../middlewares/verifyToken.js')
 
 
@@ -11,5 +11,7 @@ router.get('/serch',searchPost);
 router.put('/addToFavourites/:postId',verifyToken,addToFavourites);
 router.put('/removeFromFavourites/:postId',verifyToken,removeToFavourites);
 router.get('/favourites',verifyToken,getFavourites);
+router.get('/getPostByDateRange',verifyToken,getPostByRange);
+
 
 module.exports=router;
